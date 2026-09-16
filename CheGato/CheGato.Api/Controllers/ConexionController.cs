@@ -7,22 +7,23 @@ namespace CheGato.Api.Controllers
     [ApiController]
     public class ConexionController : ControllerBase
     {
-        private readonly string _cadenaConexion;
+      
+        private readonly string? _cadenaConexion;
 
         public ConexionController(IConfiguration config)
         {
-            _cadenaConexion = config.GetConnectionString("DefaultConnection");
+           
+            _cadenaConexion = config.GetConnectionString("DefaultConnection") ?? "";
         }
 
-        // HU-1.1: Prueba de Conexión (Ping)
         [HttpGet("ping")]
         public IActionResult Ping()
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(_cadenaConexion))
+                using (SqlConnection con = new SqlConnection(_cadenaConexion!))
                 {
-                    con.Open(); // Si logra abrir, la conexión es exitosa
+                    con.Open();
                 }
                 return Ok(new { mensaje = "¡Conexión Exitosa con SQL Server, miau! 🐾" });
             }

@@ -2,21 +2,35 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private async void OnCounterClicked(object sender, EventArgs e)
         {
-            count++;
+            CounterBtn.Text = "Conectando a la API...";
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            try
+            {
+                using HttpClient client = new HttpClient();
+                string apiUrl = "https://localhost:7151/api/Conexion/ping";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    CounterBtn.Text = "¡API Conectada! 🐾";
+                }
+                else
+                {
+                    CounterBtn.Text = $"Error: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                CounterBtn.Text = "Error de red ❌";
+                Console.WriteLine(ex.Message);
+            }
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }

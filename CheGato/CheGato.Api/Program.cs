@@ -1,15 +1,22 @@
+using CheGato.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Agregar servicios de Controladores
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Configurar Entity Framework Core con SQL Server
+builder.Services.AddDbContext<CheGatoContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configurar Swagger (Interfaz visual de la API)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar la tubería de peticiones HTTP (Pipeline)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

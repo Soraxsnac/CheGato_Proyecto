@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CheGato.Api/CheGato.Api.csproj" />
+  <Project Path="CheGato.App/CheGato.App.csproj" />
+</Solution>

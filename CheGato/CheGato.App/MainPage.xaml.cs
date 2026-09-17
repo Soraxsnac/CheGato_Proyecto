@@ -1,38 +1,30 @@
-﻿namespace CheGato.App
+﻿using CheGato.App.Models;
+using System.Net.Http.Json;
+
+namespace CheGato.App
 {
     public partial class MainPage : ContentPage
     {
+        private readonly HttpClient _client = new HttpClient();
+
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private async void OnCounterClicked(object sender, EventArgs e)
+        private async void OnCargarClicked(object sender, EventArgs e)
         {
-            CounterBtn.Text = "Conectando a la API...";
-
             try
             {
-                using HttpClient client = new HttpClient();
-                string apiUrl = "https://localhost:7151/api/Conexion/ping";
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    CounterBtn.Text = "¡API Conectada! 🐾";
-                }
-                else
-                {
-                    CounterBtn.Text = $"Error: {response.StatusCode}";
-                }
+                // Recuerda verificar si tu puerto de Swagger es 7151 u otro
+                string apiUrl = "https://localhost:7151/api/Productos";
+                var productos = await _client.GetFromJsonAsync<List<Producto>>(apiUrl);
+                ListaProductos.ItemsSource = productos;
             }
             catch (Exception ex)
             {
-                CounterBtn.Text = "Error de red ❌";
-                Console.WriteLine(ex.Message);
+                await DisplayAlertAsync("Error", $"No se pudo conectar a la API: {ex.Message}", "OK");
             }
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
         }
     }
 }
